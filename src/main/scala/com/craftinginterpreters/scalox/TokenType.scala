@@ -1,5 +1,6 @@
 package com.craftinginterpreters.scalox
 
+// Enum class for different tokens: Single character tokens, one or two character tokens, literals, keywords, EOF
 enum TokenType:
   case
   // Single-character tokens.
