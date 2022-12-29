@@ -1,8 +1,7 @@
 package com.craftinginterpreters.scalox
 
-object TokenType extends Enumeration {
-  type Token = Value
-  val
+enum TokenType:
+  case
   // Single-character tokens.
   LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE,
   COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR,
@@ -20,5 +19,4 @@ object TokenType extends Enumeration {
   AND, CLASS, ELSE, FALSE, FUN, FOR, IF, NIL, OR,
   PRINT, RETURN, SUPER, THIS, TRUE, VAR, WHILE,
 
-  EOF = Value
-}
+  EOF

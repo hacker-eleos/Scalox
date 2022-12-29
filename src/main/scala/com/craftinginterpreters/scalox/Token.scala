@@ -1,7 +1,7 @@
 package com.craftinginterpreters.scalox
 
-import TokenType.Token
+import TokenType._
 
-class Token(tokenType: Token, lexeme: String, literal: AnyVal, line: Int) {
+class Token(tokenType: TokenType, lexeme: String, literal: AnyVal, line: Int) {
   override def toString: String = tokenType + " " + lexeme + " " + literal
 }

@@ -1,5 +1,5 @@
 package com.craftinginterpreters.scalox
-import TokenType._
+import TokenType
 
 class Scanner(source: String) {
   def scanTokens(): List[Token] = {
