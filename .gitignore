@@ -93,3 +93,5 @@ fabric.properties
 *.ipr
 .idea
 out
+
+.bsp
