@@ -1,0 +1,3 @@
+var p = "hi"
+// comment
+var q = (2 == 3)
