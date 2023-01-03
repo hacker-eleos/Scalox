@@ -1,1 +1,1 @@
-This repo contains Scala implementation of Lox.
+This repo contains Scala implementation of Lox interpreter.
