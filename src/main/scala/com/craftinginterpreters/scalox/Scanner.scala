@@ -75,7 +75,7 @@ class Scanner(final val source: String) {
         val extractedString = source.substring(currentIndex + 1, endOfStringIndex)
         val numberOfNewLines = extractedString.count(_ == '\n')
         scanTokens(endOfStringIndex + 1, lineNumber + numberOfNewLines, Token(TokenType.STRING, extractedString, null, lineNumber) :: collectedTokens)
-      case c if isDigit(c) =>
+      case c if isDigit(c) => collectedTokens
       case c if isAlphabet(c) =>
         val identifier = source.substring(currentIndex).takeWhile(c => isAlphabet(c) || isDigit(c))
         val tokenType = this.keywords.get(identifier)
