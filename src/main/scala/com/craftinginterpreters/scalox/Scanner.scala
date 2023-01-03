@@ -29,11 +29,13 @@ class Scanner(final val source: String) {
   @tailrec
   private def scanTokens(currentIndex: Int, lineNumber: Int, collectedTokens: List[Token]): List[Token] | Unit = {
     if (currentIndex >= source.length) return collectedTokens
+
     def isMatchNextChar(char: Char): Boolean = {
       if (currentIndex.equals(source.length - 1)) return false
-      if (source.charAt(currentIndex+1).equals(char)) return true
+      if (source.charAt(currentIndex + 1).equals(char)) return true
       false
     }
+
     val currentChar = this.source.charAt(currentIndex)
     currentChar match {
       case '(' => scanTokens(currentIndex + 1, lineNumber, Token(TokenType.LEFT_PAREN, "(", null, lineNumber) :: collectedTokens)
@@ -62,7 +64,7 @@ class Scanner(final val source: String) {
         if (isMatchNextChar('/'))
           val endOfLineIndex = source.indexOf('\n', currentIndex)
           if (endOfLineIndex == -1) Token(TokenType.COMMENT, "//", source.substring(currentIndex + 2), lineNumber) :: collectedTokens
-          else scanTokens(endOfLineIndex+1, lineNumber + 1, Token(TokenType.COMMENT, "//", source.substring(currentIndex + 2, endOfLineIndex), lineNumber) :: collectedTokens)
+          else scanTokens(endOfLineIndex + 1, lineNumber + 1, Token(TokenType.COMMENT, "//", source.substring(currentIndex + 2, endOfLineIndex), lineNumber) :: collectedTokens)
         else scanTokens(currentIndex + 1, lineNumber, Token(TokenType.SLASH, "/", null, lineNumber) :: collectedTokens)
 
       case ' ' => scanTokens(currentIndex + 1, lineNumber, collectedTokens)
@@ -75,7 +77,11 @@ class Scanner(final val source: String) {
         val extractedString = source.substring(currentIndex + 1, endOfStringIndex)
         val numberOfNewLines = extractedString.count(_ == '\n')
         scanTokens(endOfStringIndex + 1, lineNumber + numberOfNewLines, Token(TokenType.STRING, extractedString, null, lineNumber) :: collectedTokens)
-      case c if isDigit(c) => collectedTokens
+      case c if isDigit(c) =>
+        val digitsPart = source.substring(currentIndex).takeWhile(isDigit)
+        val decimalPart = if source.charAt(currentIndex + digitsPart.length).equals('.') then source.substring(currentIndex + digitsPart.length+1).takeWhile(isDigit) else ""
+        val number = digitsPart + decimalPart
+        scanTokens(currentIndex + number.length, lineNumber, Token(TokenType.NUMBER, number, null, lineNumber) :: collectedTokens)
       case c if isAlphabet(c) =>
         val identifier = source.substring(currentIndex).takeWhile(c => isAlphabet(c) || isDigit(c))
         val tokenType = this.keywords.get(identifier)
