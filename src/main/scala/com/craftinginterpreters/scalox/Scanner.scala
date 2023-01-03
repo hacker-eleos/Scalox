@@ -4,10 +4,6 @@ import scala.annotation.tailrec
 import scala.collection.immutable.HashMap
 
 class Scanner(final val source: String) {
-  private def isDigit(c: Char) = c >= '0' && c <= '9'
-
-  private def isAlphabet(c: Char) = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_'
-
   private val keywords = HashMap[String, TokenType](
     ("and", TokenType.AND),
     ("class", TokenType.CLASS),
@@ -25,6 +21,18 @@ class Scanner(final val source: String) {
     ("true", TokenType.TRUE),
     ("var", TokenType.VAR),
     ("while", TokenType.WHILE))
+
+  def scanTokens(): List[Token] = {
+    val tokens = scanTokens(0, 0, List.empty)
+    tokens match {
+      case t: List[Token] => t
+      case _: Unit => Nil
+    }
+  }
+
+  private def isDigit(c: Char) = c >= '0' && c <= '9'
+
+  private def isAlphabet(c: Char) = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_'
 
   @tailrec
   private def scanTokens(currentIndex: Int, lineNumber: Int, collectedTokens: List[Token]): List[Token] | Unit = {
@@ -58,7 +66,7 @@ class Scanner(final val source: String) {
         if (isMatchNextChar('=')) scanTokens(currentIndex + 2, lineNumber, Token(TokenType.LESS_EQUAL, "<=", null, lineNumber) :: collectedTokens)
         else scanTokens(currentIndex + 1, lineNumber, Token(TokenType.EQUAL, "<", null, lineNumber) :: collectedTokens)
       case '>' =>
-        if (isMatchNextChar('=')) scanTokens(currentIndex + 2, lineNumber, Token(TokenType.GREATER_EQUAL, ">=", null, lineNumber) :: collectedTokens)
+        if (isMatchNextChar('=')) scanTokens(currentIndex +2, lineNumber, Token(TokenType.GREATER_EQUAL, ">=", null, lineNumber) :: collectedTokens)
         else scanTokens(currentIndex + 1, lineNumber, Token(TokenType.EQUAL, "=", null, lineNumber) :: collectedTokens)
       case '/' =>
         if (isMatchNextChar('/'))
@@ -79,8 +87,8 @@ class Scanner(final val source: String) {
         scanTokens(endOfStringIndex + 1, lineNumber + numberOfNewLines, Token(TokenType.STRING, extractedString, null, lineNumber) :: collectedTokens)
       case c if isDigit(c) =>
         val digitsPart = source.substring(currentIndex).takeWhile(isDigit)
-        val decimalPart = if source.charAt(currentIndex + digitsPart.length).equals('.') then source.substring(currentIndex + digitsPart.length+1).takeWhile(isDigit) else ""
-        val number = digitsPart + decimalPart
+        val decimalPart = if source.charAt(currentIndex + digitsPart.length).equals('.') then source.substring(currentIndex + digitsPart.length + 1).takeWhile(isDigit) else ""
+        val number = digitsPart + (if decimalPart.nonEmpty then "." + decimalPart else decimalPart)
         scanTokens(currentIndex + number.length, lineNumber, Token(TokenType.NUMBER, number, null, lineNumber) :: collectedTokens)
       case c if isAlphabet(c) =>
         val identifier = source.substring(currentIndex).takeWhile(c => isAlphabet(c) || isDigit(c))
@@ -90,14 +98,6 @@ class Scanner(final val source: String) {
           case None => scanTokens(currentIndex + identifier.length, lineNumber, Token(TokenType.IDENTIFIER, identifier, null, lineNumber) :: collectedTokens)
         }
       case _ => Scalox.error(lineNumber, "Unexpected string")
-    }
-  }
-
-  def scanTokens(): List[Token] = {
-    val tokens = scanTokens(0, 0, List.empty)
-    tokens match {
-      case t: List[Token] => t
-      case _: Unit => Nil
     }
   }
 }
