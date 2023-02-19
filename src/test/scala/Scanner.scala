@@ -2,6 +2,8 @@ import org.scalatest._
 import funspec._
 import matchers._
 import com.craftinginterpreters.scalox.Scanner as ScannerSpec
+import org.scalacheck._
+
 class Scanner extends AnyFunSpec{
 
   describe("Valid programs"){
