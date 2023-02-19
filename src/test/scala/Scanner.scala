@@ -15,7 +15,6 @@ class Scanner extends AnyFunSpec{
       val tokens = scanner.scanTokens()
       assert(tokens.nonEmpty)
       assert(tokens.length == 14)
-      tokens.foreach(Console.println)
     }
     it("should have 4 tokens") {
       val program =
@@ -26,5 +25,23 @@ class Scanner extends AnyFunSpec{
       assert(tokens.nonEmpty)
       assert(tokens.length == 4)
     }
+
+    it("should have 0 tokens") {
+      val program =
+        """ """
+      val scanner = new ScannerSpec(program)
+      val tokens = scanner.scanTokens()
+      assert(tokens.isEmpty)
+    }
+    it("should have 6 tokens") {
+      val program =
+        """var p = 4343.23+23"""
+
+      val scanner = new ScannerSpec(program)
+      val tokens = scanner.scanTokens()
+      assert(tokens.nonEmpty)
+      assert(tokens.length == 6)
+    }
+
   }
 }

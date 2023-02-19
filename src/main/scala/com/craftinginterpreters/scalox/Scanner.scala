@@ -69,9 +69,9 @@ class Scanner(final val source: String) {
         if (isMatchNextChar('=')) scanTokens(currentIndex +2, lineNumber, Token(TokenType.GREATER_EQUAL, ">=", null, lineNumber) :: collectedTokens)
         else scanTokens(currentIndex + 1, lineNumber, Token(TokenType.EQUAL, "=", null, lineNumber) :: collectedTokens)
       case '/' =>
-        if (isMatchNextChar('/'))
+        if (isMatchNextChar('/')) then
           val endOfLineIndex = source.indexOf('\n', currentIndex)
-          if (endOfLineIndex == -1) Token(TokenType.COMMENT, "//", source.substring(currentIndex + 2), lineNumber) :: collectedTokens
+          if (endOfLineIndex == -1) then Token(TokenType.COMMENT, "//", source.substring(currentIndex + 2), lineNumber) :: collectedTokens
           else scanTokens(endOfLineIndex + 1, lineNumber + 1, Token(TokenType.COMMENT, "//", source.substring(currentIndex + 2, endOfLineIndex), lineNumber) :: collectedTokens)
         else scanTokens(currentIndex + 1, lineNumber, Token(TokenType.SLASH, "/", null, lineNumber) :: collectedTokens)
 
@@ -87,7 +87,7 @@ class Scanner(final val source: String) {
         scanTokens(endOfStringIndex + 1, lineNumber + numberOfNewLines, Token(TokenType.STRING, extractedString, null, lineNumber) :: collectedTokens)
       case c if isDigit(c) =>
         val digitsPart = source.substring(currentIndex).takeWhile(isDigit)
-        val decimalPart = if source.charAt(currentIndex + digitsPart.length).equals('.') then source.substring(currentIndex + digitsPart.length + 1).takeWhile(isDigit) else ""
+        val decimalPart = if source.charAt(currentIndex + digitsPart.length).equals('.') then source.substring(currentIndex + digitsPart.length+1).takeWhile(isDigit) else ""
         val number = digitsPart + (if decimalPart.nonEmpty then "." + decimalPart else decimalPart)
         scanTokens(currentIndex + number.length, lineNumber, Token(TokenType.NUMBER, number, null, lineNumber) :: collectedTokens)
       case c if isAlphabet(c) =>
